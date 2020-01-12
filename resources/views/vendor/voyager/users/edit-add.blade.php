@@ -1,6 +1,10 @@
 @php
-    $edit = !is_null($dataTypeContent->getKey());
-    $add  = is_null($dataTypeContent->getKey());
+    $edit = !is_null($dataTypeContent->getKey()); //Editing
+    $add  = is_null($dataTypeContent->getKey()); //Adding
+
+    //Current User is Admin
+    $is_admin = isset(auth()->user()->role_id) && auth()->user()->role_id == Config::get('roles.ids.ADMIN');
+
 @endphp
 
 @extends('voyager::master')
@@ -68,7 +72,9 @@
                                     <legend class="text-{{ $row->details->legend->align ?? 'center' }}" style="background-color: {{ $row->details->legend->bgcolor ?? '#f0f0f0' }};padding: 5px;">{{ $row->details->legend->text }}</legend>
                                 @endif
 
-                                <div class="form-group @if($row->type == 'hidden') hidden @endif col-md-{{ $display_options->width ?? 12 }} {{ $errors->has($row->field) ? 'has-error' : '' }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
+                                <div class="form-group @if($row->type == 'hidden') hidden @endif 
+                                	@if($add && isset($display_options->hide_on_add) && $display_options->hide_on_add) hidden @endif
+                                	col-md-{{ $display_options->width ?? 12 }} {{ $errors->has($row->field) ? 'has-error' : '' }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
                                     {{ $row->slugify }}
                                     <label class="control-label" for="name">{{ $row->display_name }}</label>
                                     @include('voyager::multilingual.input-hidden-bread-edit-add')
@@ -90,6 +96,12 @@
                                     @endif
                                 </div>
                             @endforeach
+
+                            <!-- Hardcoded IS PROVINCIA ADMIN FIELD -->
+                            <div class="form-group  col-md-12 " id="is_provincia_admin" style="display: none;">
+                            	<input class="" type="checkbox" name="is_provincia_admin" value='true'>
+                                <label class="control-label" for="is_provincia_admin">Es Administrador de Provincia?</label>
+                            </div>
 
                         </div><!-- panel-body -->
 
@@ -205,10 +217,10 @@
             });
             $('[data-toggle="tooltip"]').tooltip();
 
+            
 
             //Adding New User Flow
             <?php if($add): ?>
-           
            		//HIDE for Default
            		$('#area_dropdowm').hide();
 
@@ -220,6 +232,15 @@
 					else{
 						$('#area_dropdowm').hide();
 					}
+
+					//Only admin Actions
+		            <?php if($is_admin): ?>
+		            	if(this.value == "{{Config::get('roles.ids.ENCARGADA')}}"){
+							$('#is_provincia_admin').show();
+						}else{
+							$('#is_provincia_admin').hide();
+						}
+		            <?php endif; ?>
 				});
 
 
