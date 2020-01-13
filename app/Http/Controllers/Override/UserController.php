@@ -62,6 +62,9 @@ class UserController extends \TCG\Voyager\Http\Controllers\VoyagerUserController
         //Add value to Password field to send Main
         $request->merge(["password" => bin2hex(openssl_random_pseudo_bytes(4))]); //Generate a Random Password
 
+        //Add value to created_by field
+        $request->merge(["created_by" => Auth::user()->id]);
+
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->addRows)->validate();
         $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
