@@ -144,7 +144,7 @@
                                                 </tr>
                                             @empty
                                                     <tr>
-                                                        <p>No hay Encargados.</p>
+                                                        <p style="text-align: center;"> <i> No hay Encargados. </i></p>
                                                     </tr>
                                             @endforelse
                                             </tbody>
@@ -222,7 +222,7 @@
                                                 </tr>
                                                 @empty
                                                     <tr>
-                                                        <p>No hay Embarazadas.</p>
+                                                        <p style="text-align: center;"> <i> No hay Embarazadas. </i></p>
                                                     </tr>
                                                 @endforelse
                                             </tbody>
