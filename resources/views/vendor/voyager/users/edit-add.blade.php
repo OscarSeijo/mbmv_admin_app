@@ -73,9 +73,10 @@
                                 @endif
 
                                 <div class="form-group @if($row->type == 'hidden') hidden @endif 
-                                	@if($add && isset($display_options->hide_on_add) && $display_options->hide_on_add) hidden @endif
+                                    @if(isset($display_options->remove_required) && $display_options->remove_required) remove_required @endif
+                                    @if($add && isset($display_options->hide_on_add) && $display_options->hide_on_add) hidden @endif
                                     @if($edit && isset($display_options->edit_readonly) && $display_options->edit_readonly) readonly @endif
-                                	col-md-{{ $display_options->width ?? 12 }} {{ $errors->has($row->field) ? 'has-error' : '' }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
+                                    col-md-{{ $display_options->width ?? 12 }} {{ $errors->has($row->field) ? 'has-error' : '' }}" @if(isset($display_options->id)){{ "id=$display_options->id" }}@endif>
                                     {{ $row->slugify }}
                                     <label class="control-label" for="name">{{ $row->display_name }}</label>
                                     @include('voyager::multilingual.input-hidden-bread-edit-add')
@@ -100,7 +101,7 @@
 
                             <!-- Hardcoded IS PROVINCIA ADMIN FIELD -->
                             <div class="form-group  col-md-12 " id="is_provincia_admin" style="display: none;">
-                            	<input class="" type="checkbox" name="is_provincia_admin" value='true'>
+                                <input class="" type="checkbox" name="is_provincia_admin" value='true'>
                                 <label class="control-label" for="is_provincia_admin">Es Administrador de Provincia?</label>
                             </div>
 
@@ -201,7 +202,7 @@
             $('.form-group').on('click', '.remove-single-file', deleteHandler('a', false));
 
             $('#confirm_delete').on('click', function(){
-            	$.post('{{ route('voyager.'.$dataType->slug.'.media.remove') }}', params, function (response) {
+                $.post('{{ route('voyager.'.$dataType->slug.'.media.remove') }}', params, function (response) {
                     if ( response
                         && response.data
                         && response.data.status
@@ -219,31 +220,33 @@
             $('[data-toggle="tooltip"]').tooltip();
 
             $('.readonly input').attr('readonly', true);
-            
+            $('.remove_required input').each(function(){
+                $(this).prop('required', !$(this).attr('required'))
+            });
 
             //Adding New User Flow
             <?php if($add): ?>
-           		//HIDE for Default
-           		$('#area_dropdowm').hide();
+                //HIDE for Default
+                $('#area_dropdowm').hide();
 
-           		//Only Show to Encargada Role
-				$('select[name ="role_id"]').on('change', function() {
-					if(this.value == "{{Config::get('roles.ids.ENCARGADA')}}" || this.value == "{{Config::get('roles.ids.EMBARAZADA')}}"){
-						$('#area_dropdowm').show();
-					}
-					else{
-						$('#area_dropdowm').hide();
-					}
+                //Only Show to Encargada Role
+                $('select[name ="role_id"]').on('change', function() {
+                    if(this.value == "{{Config::get('roles.ids.ENCARGADA')}}" || this.value == "{{Config::get('roles.ids.EMBARAZADA')}}"){
+                        $('#area_dropdowm').show();
+                    }
+                    else{
+                        $('#area_dropdowm').hide();
+                    }
 
-					//Only admin Actions
-		            <?php if($is_admin): ?>
-		            	if(this.value == "{{Config::get('roles.ids.ENCARGADA')}}"){
-							$('#is_provincia_admin').show();
-						}else{
-							$('#is_provincia_admin').hide();
-						}
-		            <?php endif; ?>
-				});
+                    //Only admin Actions
+                    <?php if($is_admin): ?>
+                        if(this.value == "{{Config::get('roles.ids.ENCARGADA')}}"){
+                            $('#is_provincia_admin').show();
+                        }else{
+                            $('#is_provincia_admin').hide();
+                        }
+                    <?php endif; ?>
+                });
 
 
 
