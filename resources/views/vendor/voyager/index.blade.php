@@ -27,7 +27,7 @@
                         <div class="row">
                             <div class="col-md-6 col-lg-3">
                                 <div class="statistic__item">
-                                    <h2 class="number">10,368</h2>
+                                    <h2 class="number">{{$cant_embarazadas}}</h2>
                                     <span class="desc">Total Embarazadas</span>
                                     <div class="icon">
                                         <i class="zmdi zmdi-account-o"></i>
@@ -36,7 +36,7 @@
                             </div>
                             <div class="col-md-6 col-lg-3">
                                 <div class="statistic__item">
-                                    <h2 class="number">388,688</h2>
+                                    <h2 class="number">{{$cant_embarazadas_activas}}</h2>
                                     <span class="desc">Embarazadas Activas</span>
                                     <div class="icon">
                                         <i class="zmdi zmdi-plus-circle"></i>
@@ -45,7 +45,7 @@
                             </div>
                             <div class="col-md-6 col-lg-3">
                                 <div class="statistic__item">
-                                    <h2 class="number">1,086</h2>
+                                    <h2 class="number">{{$cant_embarazadas_inactivas}}</h2>
                                     <span class="desc">Embarazadas Inactivas</span>
                                     <div class="icon">
                                         <i class="zmdi zmdi-calendar-note"></i>
@@ -54,7 +54,7 @@
                             </div>
                             <div class="col-md-6 col-lg-3">
                                 <div class="statistic__item">
-                                    <h2 class="number">386</h2>
+                                    <h2 class="number">{{$cant_alertas}}</h2>
                                     <span class="desc">Cantidad de Alertas</span>
                                     <div class="icon">
                                         <i class="zmdi zmdi-alert-triangle"></i>
@@ -88,18 +88,38 @@
                                                     <td>Fecha de Ingreso</td>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            
+                                            <!-- "id" => 13
+                                            "role_id" => 3
+                                            "name" => "Felix Feliz PRO"
+                                            "email" => "ing.felixfeliz@mmail.com"
+                                            "cedula" => "402-2214805-4"
+                                            "avatar" => "users/default.png"
+                                            "email_verified_at" => null
+                                            "password" => "$2y$10$1pn4yuXWEssgJNE6oCGin.dOI8yY.LiEwJpzAu.aMsdcNJpEjj1s2"
+                                            "remember_token" => null
+                                            "settings" => null
+                                            "created_at" => "2020-01-12 18:42:40"
+                                            "updated_at" => "2020-01-12 18:42:40"
+                                            "status" => 1
+                                            "first_time" => null
+                                            "area_id" => 1
+                                            "phonenumber" => null
+                                            "cellphone" => null
+                                            "created_by" => 0 -->
+                                                <tbody>
+                                                    @forelse ($encargados as $encargado)
                                                 <tr>
                                                     <td>
                                                         <div class="table-data__info">
-                                                            <img src="https://www.stylist.co.uk/images/app/uploads/2019/05/16144157/ryangosling-256x256.jpg" style="width:75px; border-radius: 50%;">
+                                                            <img src="/storage/{{$encargado->avatar}}" style="width:75px; border-radius: 50%;">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="table-data__info">
-                                                            <h6>Felix Feliz</h6>
+                                                            <h6>{{$encargado->name}}</h6>
                                                             <span>
-                                                                <a href="#">ing.felixfeliz@gmail.com</a>
+                                                                <a href="#">{{$encargado->email}}</a>
                                                             </span>
                                                         </div>
                                                     </td>
@@ -108,25 +128,30 @@
                                                     </td>
                                                     <td>
                                                         <div class="table-data__info">
-                                                            <h5>Santo Domingo Este</h5>
-                                                            <h6>Urbanización Italia</h6>
-                                                            <h7><i>Rotonda Del Rosal</i></h7>
+                                                            <h5>{{$provincias[$encargado->area_id]->provincia_name}}</h5>
+                                                            <h6>{{$provincias[$encargado->area_id]->sector_name}}</h6>
+                                                            <h7><i>{{$provincias[$encargado->area_id]->area_name}}</i></h7>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="table-data__info">
-                                                            <h6>20/01/2020</h6>
+                                                            <h6>{{explode(" ",$encargado->created_at)[0]}}</h6>
                                                             <span>
-                                                                <a style="text-decoration: none;">23:55:02</a>
+                                                                <a style="text-decoration: none;">{{explode(" ", $encargado->created_at)[1]}}</a>
                                                             </span>
                                                         </div>
                                                     </td>
                                                 </tr>
+                                            @empty
+                                                    <tr>
+                                                        <p>No hay Encargados.</p>
+                                                    </tr>
+                                            @endforelse
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="user-data__footer">
-                                        <button class="au-btn au-btn-load">Ver Más</button>
+                                        <a href="/admin/users" class="au-btn au-btn-load">Ver Más</a>
                                     </div>
                                 </div>
                                 <!-- END USER DATA-->
@@ -161,17 +186,18 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @forelse ($embarazadas as $embarazada)
                                                 <tr>
                                                     <td>
                                                         <div class="table-data__info">
-                                                            <img src="https://news.artnet.com/app/news-upload/2019/12/Screen-Shot-2019-12-12-at-12.22.26-PM-256x256.png" style="width:75px; border-radius: 50%;">
+                                                            <img src="/storage/{{$embarazada->avatar}}" style="width:75px; border-radius: 50%;">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="table-data__info">
-                                                            <h6>María Montero</h6>
+                                                            <h6>{{$embarazada->name}}</h6>
                                                             <span>
-                                                                <a href="#">maria_montero@gmail.com</a>
+                                                                <a href="#">{{$embarazada->email}}</a>
                                                             </span>
                                                         </div>
                                                     </td>
@@ -180,25 +206,30 @@
                                                     </td>
                                                     <td>
                                                         <div class="table-data__info">
-                                                            <h5>Santo Domingo Norte</h5>
-                                                            <h6>Villa Mella</h6>
-                                                            <h7><i>La Cañita</i></h7>
+                                                            <h5>{{$provincias[$embarazada->area_id]->provincia_name}}</h5>
+                                                            <h6>{{$provincias[$embarazada->area_id]->sector_name}}</h6>
+                                                            <h7><i>{{$provincias[$embarazada->area_id]->area_name}}</i></h7>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="table-data__info">
-                                                            <h6>11/12/2019</h6>
+                                                            <h6>{{explode(" ",$embarazada->created_at)[0]}}</h6>
                                                             <span>
-                                                                <a style="text-decoration: none;">12:33:42</a>
+                                                                <a style="text-decoration: none;">{{explode(" ", $embarazada->created_at)[1]}}</a>
                                                             </span>
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                @empty
+                                                    <tr>
+                                                        <p>No hay Embarazadas.</p>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="user-data__footer">
-                                        <button class="au-btn au-btn-load">Ver Más</button>
+                                        <a class="au-btn au-btn-load">Ver Más</a>
                                     </div>
                                 </div>
                                 <!-- END USER DATA-->

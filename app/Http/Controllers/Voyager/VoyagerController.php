@@ -6,11 +6,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Intervention\Image\Constraint;
 use Intervention\Image\Facades\Image;
 use League\Flysystem\Util;
 use TCG\Voyager\Facades\Voyager;
+
+//Using Data
+use App\User;
+use App\Alerta;
 
 class VoyagerController extends Controller
 {
@@ -25,7 +30,43 @@ class VoyagerController extends Controller
             $currentUser->save();
             return redirect()->route('voyager.users.edit',$currentUser->id);
         }
-        return Voyager::view('voyager::index');
+
+
+
+        //VAriables Pantalla
+
+
+        //Cant Embarazadas
+        $cant_embarazadas = User::where('role_id', \Config::get('roles.ids.EMBARAZADA'))->count();
+        //Cant Embarazadas Activas
+        $cant_embarazadas_activas = User::where('role_id', \Config::get('roles.ids.EMBARAZADA'))->where('status',1)->count();
+        //Cant Embarazadas Inactivas
+        $cant_embarazadas_inactivas = User::where('role_id', \Config::get('roles.ids.EMBARAZADA'))->where('status',0)->count();
+        // Cant Alertas [Pending]
+        $cant_alertas = Alerta::where('status', 'PENDING')->count();
+        // $cant_alertas = 0;
+        //Ultimos 5 Encargados
+        $encargados = User::where('role_id', \Config::get('roles.ids.ENCARGADA'))->orderBy('id', 'desc')->take(5)->get();
+        //Ultimos 5 Embarazadas
+        $embarazadas = User::where('role_id', \Config::get('roles.ids.EMBARAZADA'))->orderBy('id', 'desc')->take(5)->get();
+
+        //provincias
+        $provincias = DB::select( DB::raw("SELECT areas.id, areas.name as 'area_name', sectores.name as 'sector_name', provincias.name as 'provincia_name' FROM areas INNER JOIN sectores ON areas.sector_id = sectores.id INNER JOIN provincias ON provincias.id = sectores.provincia_id") );
+        $provincias = array_column($provincias, null, 'id');
+
+        //Calulos de Pantalla
+        return Voyager::view(
+            'voyager::index', 
+            compact(
+                'cant_embarazadas',
+                'cant_embarazadas_activas',
+                'cant_embarazadas_inactivas',
+                'cant_alertas',
+                'encargados',
+                'embarazadas',
+                'provincias'
+            )
+        );
     }
 
     public function logout()

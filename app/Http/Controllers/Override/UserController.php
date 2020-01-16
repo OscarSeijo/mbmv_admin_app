@@ -89,7 +89,7 @@ class UserController extends \TCG\Voyager\Http\Controllers\VoyagerUserController
             $to_email = $request->email;
             $subject = 'Nuevo Usuario - MBMV';
             $message = 'Se ha creando un nuevo usuario utilizando este Correo Eletrónio, tu clave generada es:' . $request->password;
-            $headers = 'From: noreply@mbmv.com';
+            $headers = 'From: Sistema MBMV <noreply@mbmv.com>';
             mail($to_email,$subject,$message,$headers);
 
         // ---
