@@ -83,9 +83,15 @@ class UserController extends \TCG\Voyager\Http\Controllers\VoyagerUserController
         }
 
         //Log To Get Password Meanwhile
-        Log::debug(print_r($request->all(),true));
+        // Log::debug(print_r($request->all(),true));
         // ---
         //TODO: Send Mail Process
+            $to_email = $request->email;
+            $subject = 'Nuevo Usuario - MBMV';
+            $message = 'Se ha creando un nuevo usuario utilizando este Correo Eletrónio, tu clave generada es:' . $request->password;
+            $headers = 'From: noreply@mbmv.com';
+            mail($to_email,$subject,$message,$headers);
+
         // ---
 
         if (!$request->has('_tagging')) {
