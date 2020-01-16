@@ -37,13 +37,12 @@ Route::get('/nutricion', 'apiController@nutricion')->name('ApiNutricionIndex');
 Route::get('/tips', 'apiController@tips')->name('ApiTipsIndex');
 
 // Sugerencia Controller
-Route::get('/sugerenciadata', 'apiController@SugerenciaData')->name('ApiSugerenciaData');
 Route::post('/sugerencias/', 'apiController@Sugerencia')->name('ApiSugerenciasStore');
 
 
 
 
 // Rutas para parte administrativa:
-Route::post('/login/', 'accountController@login')->name('ApiLoginApp');
+
 
 
