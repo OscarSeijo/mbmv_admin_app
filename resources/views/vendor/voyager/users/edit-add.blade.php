@@ -220,7 +220,10 @@
             $('[data-toggle="tooltip"]').tooltip();
 
             $('.readonly input').attr('readonly', true);
+
+            // Super Force
             $('.remove_required input').each(function(){
+                $(this).prop('required', !$(this).attr('required'))
                 $(this).prop('required', !$(this).attr('required'))
             });
 
